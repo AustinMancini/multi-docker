@@ -1,0 +1,26 @@
+sudo: required
+services:
+    - docker
+
+# use client dir to build a test version image of our "client" project and run tests inside of it
+before_install:
+    - docker build -t amancinidoc/react-test -f ./client/Dockerfile.dev ./client
+
+# test running section
+script:
+    - docker run -e CI=true USERNAME/react-test npm test
+
+after_success:
+    - docker build -t amancinidoc/multi-client ./client
+    - docker build -t amancinidoc/multi-nginx ./nginx
+    - docker build -t amancinidoc/multi-server ./server
+    - docker build -t amancinidoc/multi-worker ./worker
+
+    # Login to the docker CLI
+    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+    # Take aboves images and push them to Dockerhub
+    docker push amancinidoc/multi-client
+    docker push amancinidoc/multi-nginx
+    docker push amancinidoc/multi-server
+    docker push amancinidoc/multi-worker
