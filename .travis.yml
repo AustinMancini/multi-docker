@@ -17,10 +17,10 @@ after_success:
     - docker build -t amancinidoc/multi-worker ./worker
 
     # Login to the docker CLI
-    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
     # Take aboves images and push them to Dockerhub
-    docker push amancinidoc/multi-client
-    docker push amancinidoc/multi-nginx
-    docker push amancinidoc/multi-server
-    docker push amancinidoc/multi-worker
+    - docker push amancinidoc/multi-client
+    - docker push amancinidoc/multi-nginx
+    - docker push amancinidoc/multi-server
+    - docker push amancinidoc/multi-worker
