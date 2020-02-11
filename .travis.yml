@@ -25,15 +25,15 @@ after_success:
   - docker push amancinidoc/multi-server
   - docker push amancinidoc/multi-worker
 
-deploy:
-  edge: true
-  provider: elasticbeanstalk
-  region: us-east-1
-  app: multi-docker
-  env: MultiDocker-env
-  bucket_name: elasticbeanstalk-us-east-1-702598007964
-  bucket_path: docker-multi
-  on:
-    branch: master
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY
+# deploy:
+#   edge: true
+#   provider: elasticbeanstalk
+#   region: us-east-1
+#   app: multi-docker
+#   env: MultiDocker-env
+#   bucket_name: elasticbeanstalk-us-east-1-702598007964
+#   bucket_path: docker-multi
+#   on:
+#     branch: master
+#   access_key_id: $AWS_ACCESS_KEY
+#   secret_access_key: $AWS_SECRET_KEY
