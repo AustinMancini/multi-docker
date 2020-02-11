@@ -1,39 +1,39 @@
 sudo: required
 services:
-    - docker
+  - docker
 
 # use client dir to build a test version image of our "client" project and run tests inside of it
 before_install:
-    - docker build -t amancinidoc/react-test -f ./client/Dockerfile.dev ./client
+  - docker build -t amancinidoc/react-test -f ./client/Dockerfile.dev ./client
 
 # test running section
 script:
-    - docker run -e CI=true amancinidoc/react-test npm test
+  - docker run -e CI=true amancinidoc/react-test npm test -- --coverage
 
 after_success:
-    - docker build -t amancinidoc/multi-client ./client
-    - docker build -t amancinidoc/multi-nginx ./nginx
-    - docker build -t amancinidoc/multi-server ./server
-    - docker build -t amancinidoc/multi-worker ./worker
+  - docker build -t amancinidoc/multi-client ./client
+  - docker build -t amancinidoc/multi-nginx ./nginx
+  - docker build -t amancinidoc/multi-server ./server
+  - docker build -t amancinidoc/multi-worker ./worker
 
-    # Login to the docker CLI
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Login to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
-    # Take aboves images and push them to Dockerhub
-    - docker push amancinidoc/multi-client
-    - docker push amancinidoc/multi-nginx
-    - docker push amancinidoc/multi-server
-    - docker push amancinidoc/multi-worker
+  # Take aboves images and push them to Dockerhub
+  - docker push amancinidoc/multi-client
+  - docker push amancinidoc/multi-nginx
+  - docker push amancinidoc/multi-server
+  - docker push amancinidoc/multi-worker
 
 deploy:
-    edge: true
-    provider: elasticbeanstalk
-    region: us-east-1
-    app: multi-docker
-    env: MultiDocker-env
-    bucket_name: elasticbeanstalk-us-east-1-702598007964
-    bucket_path: docker-multi
-    on:
-        branch: master
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
+  edge: true
+  provider: elasticbeanstalk
+  region: us-east-1
+  app: multi-docker
+  env: MultiDocker-env
+  bucket_name: elasticbeanstalk-us-east-1-702598007964
+  bucket_path: docker-multi
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
